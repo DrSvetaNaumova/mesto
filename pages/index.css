@@ -1,0 +1,43 @@
+@import url('../vendor/normalize.css');
+@import url('../fonts/fonts.css');
+@import url('../blocks/page/page.css');
+@import url('../blocks/sr-only/sr-only.css');
+
+@import url('../blocks/header/header.css');
+@import url('../blocks/header/__logo/header__logo.css');
+
+@import url('../blocks/profile/profile.css');
+@import url('../blocks/profile/__main/profile__main.css');
+@import url('../blocks/profile/__avatar/profile__avatar.css');
+@import url('../blocks/profile/__text/profile__text.css');
+@import url('../blocks/profile/__name-edit-container/profile__name-edit-container.css');
+@import url('../blocks/profile/__name/profile__name.css');
+@import url('../blocks/profile/__edit-button/profile__edit-button.css');
+@import url('../blocks/profile/__profession/profile__profession.css');
+@import url('../blocks/profile/__add-button/profile__add-button.css');
+@import url('../blocks/profile/__add-button-image/profile__add-button-image.css');
+
+
+@import url('../blocks/elements/elements.css');
+@import url('../blocks/elements/__element/elements__element.css');
+@import url('../blocks/elements/__image/elements__image.css');
+@import url('../blocks/elements/__description/elements__description.css');
+@import url('../blocks/elements/__description-like/elements__description-like.css');
+@import url('../blocks/elements/__like/elements__like.css');
+
+
+@import url('../blocks/footer/footer.css');
+@import url('../blocks/footer/__copyright/footer__copyright.css');
+
+
+@import url('../blocks/pop-up/pop-up.css');
+@import url('../blocks/pop-up/__heading/pop-up__heading.css');
+@import url('../blocks/pop-up/__container/pop-up__container.css');
+@import url('../blocks/pop-up/__text/pop-up__text.css');
+@import url('../blocks/pop-up/__text/_name/pop-up__text_name.css');
+@import url('../blocks/pop-up/__text/_profession/pop-up__text_profession.css');
+@import url('../blocks/pop-up/__save-button/pop-up__save-button.css');
+@import url('../blocks/pop-up/__close-button/pop-up__close-button.css');
+
+
+@import url('../blocks/pop-up/_opened/pop-up_opened.css');

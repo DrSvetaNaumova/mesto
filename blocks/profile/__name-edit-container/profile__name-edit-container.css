@@ -1,0 +1,13 @@
+.profile__name-edit-container {
+  display: flex;
+  align-items: flex-end; 
+}
+
+@media screen and (min-width: 320px) and (max-width: 767px) {
+  .profile__name-edit-container {
+
+    position: relative;
+    margin-left: 28px;
+
+   }
+}
