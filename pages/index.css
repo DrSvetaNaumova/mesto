@@ -24,11 +24,10 @@
 @import url('../blocks/elements/__description/elements__description.css');
 @import url('../blocks/elements/__description-like/elements__description-like.css');
 @import url('../blocks/elements/__like/elements__like.css');
-
+@import url('../blocks/elements/__like/_checked/elements__like_checked.css');
 
 @import url('../blocks/footer/footer.css');
 @import url('../blocks/footer/__copyright/footer__copyright.css');
-
 
 @import url('../blocks/pop-up/pop-up.css');
 @import url('../blocks/pop-up/__heading/pop-up__heading.css');
@@ -38,6 +37,5 @@
 @import url('../blocks/pop-up/__text/_profession/pop-up__text_profession.css');
 @import url('../blocks/pop-up/__save-button/pop-up__save-button.css');
 @import url('../blocks/pop-up/__close-button/pop-up__close-button.css');
-
 
 @import url('../blocks/pop-up/_opened/pop-up_opened.css');
