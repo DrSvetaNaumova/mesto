@@ -1,5 +1,6 @@
 .page {
   max-width: 1280px;
+  min-width: 320px;
   margin: 0 auto;
   padding: 45px 200px 60px;
   color: #fff;
@@ -14,19 +15,19 @@
   position: relative;
 }
 
-@media screen and (min-width: 801px) and (max-width: 1279px) {
+@media screen and (max-width: 1279px) {
   .page {
     padding: 25px 50px 36px;
   }
 }
 
-@media screen and (min-width: 600px) and (max-width: 800px) {
+@media screen and (max-width: 800px) {
   .page {
     padding: 25px 40px 36px;
   }
 }
 
-@media screen and (min-width: 320px) and (max-width: 599px) {
+@media screen and (max-width: 599px) {
   .page {
     padding: 25px 0 36px;
   }
