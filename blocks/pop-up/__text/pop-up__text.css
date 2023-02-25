@@ -1,7 +1,6 @@
 .pop-up__text {
-  padding: 0;
+  padding: 10px 0 9px;
   width: 100%;
-  height: 36px;
   font-weight: 400;
   font-size: 14px;
   line-height: 17px;
