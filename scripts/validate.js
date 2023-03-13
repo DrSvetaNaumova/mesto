@@ -56,7 +56,7 @@ const setEventListeners = (form) => {
   });
 };
 
-function enableValidation(obj) {
+function enableValidation() {
   const forms = Array.from(document.querySelectorAll(obj.formSelector));
   forms.forEach((form) => {
     form.addEventListener('submit', (evt) => evt.preventDefault());
@@ -64,4 +64,4 @@ function enableValidation(obj) {
   });
 }
 
-enableValidation(obj);
+enableValidation();
