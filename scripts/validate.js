@@ -5,7 +5,6 @@ const obj = {
   inactiveButtonClass: 'pop-up__save-button_disabled',
   inputErrorClass: 'pop-up__input_type_error',
   spanErrorClass: 'pop-up__error_visible',
-  fieldSetSelector: '.pop-up__form-set'
 };
 
 const showInputError = (form, input, errorMessage) => {
@@ -61,10 +60,7 @@ function enableValidation(obj) {
   const forms = Array.from(document.querySelectorAll(obj.formSelector));
   forms.forEach((form) => {
     form.addEventListener('submit', (evt) => evt.preventDefault());
-    const fieldSets = Array.from(form.querySelectorAll(obj.fieldSetSelector));
-    fieldSets.forEach((fieldSet) => {
-      setEventListeners(fieldSet);
-    });
+    setEventListeners(form);
   });
 }
 
