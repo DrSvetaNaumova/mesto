@@ -41,7 +41,7 @@ function editProfile() {
   inputProfileName.value = savedProfileName.textContent;
   inputProfileProfession.value = savedProfileProfession.textContent;
   openPopUp(popUpTypeProfile);
-  button.classList.add(validationConfig.inactiveButtonClass);
+  enableValidation(validationConfig);
 }
 
 function saveProfileUpdate(event) {
@@ -75,8 +75,9 @@ initialCards.forEach((item) => {
 });
 
 function addNewCard() {
+  formTypeCard.reset();
   openPopUp(popUpTypeCard);
-  button.classList.add(validationConfig.inactiveButtonClass);
+  enableValidation(validationConfig);
 }
 
 function saveNewCard(event) {
