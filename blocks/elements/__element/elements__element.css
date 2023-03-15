@@ -5,9 +5,3 @@
   flex-direction: column;
   position: relative;
 }
-
-@media screen and (max-width: 767px) {
-  .elements__element {
-    padding: 0 19px;
-  }
-}

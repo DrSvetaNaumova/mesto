@@ -1,55 +1,3 @@
-const editProfileButton = document.querySelector('.profile__edit-button');
-const addButton = document.querySelector('.profile__add-button');
-const сloseButtons = document.querySelectorAll('.pop-up__close-button');
-
-const popUpTypeCard = document.querySelector('.pop-up_type_card');
-const popUpTypeProfile = document.querySelector('.pop-up_type_profile');
-const popUpTypeImage = document.querySelector('.pop-up_type_image');
-
-const inputProfileName = document.querySelector('.pop-up__input_type_name');
-const inputProfileProfession = document.querySelector(
-  '.pop-up__input_type_profession'
-);
-const savedProfileName = document.querySelector('.profile__name');
-const savedProfileProfession = document.querySelector('.profile__profession');
-
-const inputCardUrl = document.querySelector('.pop-up__input_type_url');
-const inputCardPlace = document.querySelector('.pop-up__input_type_place');
-const popUpImage = document.querySelector('.pop-up__image');
-const popUpDescription = document.querySelector('.pop-up__description');
-
-const formTypeProfile = document.querySelector('.pop-up__form_type_profile');
-const formTypeCard = document.querySelector('.pop-up__form_type_card');
-
-const cardsContainer = document.querySelector('.elements');
-const cardTemplate = document.querySelector('.elements__template').content;
-
-const initialCards = [
-  {
-    name: 'Архыз',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/arkhyz.jpg',
-  },
-  {
-    name: 'Челябинская область',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/chelyabinsk-oblast.jpg',
-  },
-  {
-    name: 'Иваново',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/ivanovo.jpg',
-  },
-  {
-    name: 'Камчатка',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kamchatka.jpg',
-  },
-  {
-    name: 'Холмогорский район',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/kholmogorsky-rayon.jpg',
-  },
-  {
-    name: 'Байкал',
-    link: 'https://pictures.s3.yandex.net/frontend-developer/cards-compressed/baikal.jpg',
-  },
-];
 
 editProfileButton.addEventListener('click', editProfile);
 addButton.addEventListener('click', addNewCard);
@@ -61,14 +9,6 @@ addButton.addEventListener('click', addNewCard);
 formTypeProfile.addEventListener('submit', saveProfileUpdate);
 formTypeCard.addEventListener('submit', saveNewCard);
 
-//закрытие попапа по клику на Esc
-document.addEventListener('keydown', (event) => {
-  const buttonEscape = document.querySelector('.pop-up_opened');
-  if (event.key === 'Escape') {
-    buttonEscape.classList.remove('pop-up_opened');
-  }
-});
-
 //закрытие попапа по клику на оверлей
 const popUps = document.querySelectorAll('.pop-up');
 popUps.forEach((popUp) => {
@@ -79,18 +19,29 @@ popUps.forEach((popUp) => {
   });
 });
 
+//закрытие попапа по клику на Esc
+function closePopUpByEsc(evt) {
+  if (evt.key === 'Escape') {
+    const popUpOpened = document.querySelector('.pop-up_opened');
+    closePopUp(popUpOpened);
+  }
+}
+
 function openPopUp(popUp) {
   popUp.classList.add('pop-up_opened');
+  document.addEventListener('keydown', closePopUpByEsc);
 }
 
 function closePopUp(popUp) {
   popUp.classList.remove('pop-up_opened');
+  document.removeEventListener('keydown', closePopUpByEsc);
 }
 
 function editProfile() {
   inputProfileName.value = savedProfileName.textContent;
   inputProfileProfession.value = savedProfileProfession.textContent;
   openPopUp(popUpTypeProfile);
+  button.classList.add(validationConfig.inactiveButtonClass);
 }
 
 function saveProfileUpdate(event) {
@@ -101,16 +52,14 @@ function saveProfileUpdate(event) {
 }
 
 function createCard(item) {
-  const card = cardTemplate.querySelector('.elements__element').cloneNode(true);
+  const card = cardElement.cloneNode(true);
   const cardImage = card.querySelector('.elements__image');
   cardImage.src = item.link;
   cardImage.alt = item.name;
   const cardDescription = card.querySelector('.elements__description');
   cardDescription.textContent = item.name;
   card.querySelector('.elements__like').addEventListener('click', сhangeLike);
-  card
-    .querySelector('.elements__trash-button')
-    .addEventListener('click', deleteCard);
+  card.querySelector('.elements__trash-button').addEventListener('click', deleteCard);
   cardImage.addEventListener('click', () => {
     openPopUp(popUpTypeImage);
     popUpImage.src = cardImage.src;
@@ -127,6 +76,7 @@ initialCards.forEach((item) => {
 
 function addNewCard() {
   openPopUp(popUpTypeCard);
+  button.classList.add(validationConfig.inactiveButtonClass);
 }
 
 function saveNewCard(event) {
