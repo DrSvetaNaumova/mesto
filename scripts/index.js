@@ -1,6 +1,5 @@
-
-editProfileButton.addEventListener('click', editProfile);
-addButton.addEventListener('click', addNewCard);
+editProfileButton.addEventListener('click', () => editProfile(validationConfig));//добавлен конфиг, тк функция editProfile использует элементы конфига
+addButton.addEventListener('click', () => addNewCard(validationConfig));////добавлен конфиг, тк функция addNewCard использует элементы конфига
 сloseButtons.forEach((item) => {
   const popUp = item.closest('.pop-up');
   item.addEventListener('click', () => closePopUp(popUp));
@@ -37,11 +36,15 @@ function closePopUp(popUp) {
   document.removeEventListener('keydown', closePopUpByEsc);
 }
 
-function editProfile() {
+function editProfile(config) {
+  openPopUp(popUpTypeProfile);
   inputProfileName.value = savedProfileName.textContent;
   inputProfileProfession.value = savedProfileProfession.textContent;
-  openPopUp(popUpTypeProfile);
-  enableValidation(validationConfig);
+  hideInputError(formTypeProfile, inputProfileName, config);
+  hideInputError(formTypeProfile, inputProfileProfession, config);
+  const saveProfileEditButton = formTypeProfile.querySelector('.pop-up__save-button_type_profile');
+  saveProfileEditButton.disabled = true;
+  saveProfileEditButton.classList.add(config.inactiveButtonClass);
 }
 
 function saveProfileUpdate(event) {
@@ -74,10 +77,14 @@ initialCards.forEach((item) => {
   cardsContainer.append(card);
 });
 
-function addNewCard() {
-  formTypeCard.reset();
+function addNewCard(config) {
   openPopUp(popUpTypeCard);
-  enableValidation(validationConfig);
+  formTypeCard.reset();
+  hideInputError(formTypeCard, inputCardPlace, config);
+  hideInputError(formTypeCard, inputCardUrl, config);
+  const saveNewCardButton = formTypeCard.querySelector('.pop-up__save-button_type_card');
+  saveNewCardButton.disabled = true;
+  saveNewCardButton.classList.add(config.inactiveButtonClass);
 }
 
 function saveNewCard(event) {
