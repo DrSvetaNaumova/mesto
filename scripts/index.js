@@ -1,5 +1,28 @@
-editProfileButton.addEventListener('click', () => editProfile(validationConfig));//добавлен конфиг, тк функция editProfile использует элементы конфига
-addButton.addEventListener('click', () => addNewCard(validationConfig));////добавлен конфиг, тк функция addNewCard использует элементы конфига
+import { FormValidator } from './FormValidator.js';
+import { Card } from './Сard.js';
+import {
+  editProfileButton,
+  addButton,
+  сloseButtons,
+  popUpTypeCard,
+  popUpTypeProfile,
+  inputProfileName,
+  inputProfileProfession,
+  savedProfileName,
+  savedProfileProfession,
+  inputCardUrl,
+  inputCardPlace,
+  formTypeProfile,
+  formTypeCard,
+  cardsContainer,
+  initialCards,
+  validationConfig,
+} from './constants.js';
+
+editProfileButton.addEventListener('click', () =>
+  editProfile(validationConfig)
+);
+addButton.addEventListener('click', () => addNewCard(validationConfig));
 сloseButtons.forEach((item) => {
   const popUp = item.closest('.pop-up');
   item.addEventListener('click', () => closePopUp(popUp));
@@ -42,7 +65,9 @@ function editProfile(config) {
   inputProfileProfession.value = savedProfileProfession.textContent;
   hideInputError(formTypeProfile, inputProfileName, config);
   hideInputError(formTypeProfile, inputProfileProfession, config);
-  const saveProfileEditButton = formTypeProfile.querySelector('.pop-up__save-button_type_profile');
+  const saveProfileEditButton = formTypeProfile.querySelector(
+    '.pop-up__save-button_type_profile'
+  );
   saveProfileEditButton.disabled = true;
   saveProfileEditButton.classList.add(config.inactiveButtonClass);
 }
@@ -54,55 +79,51 @@ function saveProfileUpdate(event) {
   closePopUp(popUpTypeProfile);
 }
 
-function createCard(item) {
-  const card = cardElement.cloneNode(true);
-  const cardImage = card.querySelector('.elements__image');
-  cardImage.src = item.link;
-  cardImage.alt = item.name;
-  const cardDescription = card.querySelector('.elements__description');
-  cardDescription.textContent = item.name;
-  card.querySelector('.elements__like').addEventListener('click', сhangeLike);
-  card.querySelector('.elements__trash-button').addEventListener('click', deleteCard);
-  cardImage.addEventListener('click', () => {
-    openPopUp(popUpTypeImage);
-    popUpImage.src = cardImage.src;
-    popUpImage.alt = cardImage.alt;
-    popUpDescription.textContent = cardDescription.textContent;
-  });
-  return card;
-}
-
-initialCards.forEach((item) => {
-  const card = createCard(item);
-  cardsContainer.append(card);
-});
+const hideInputError = (form, input, config) => {
+  const error = form.querySelector(`.${input.id}-error`);
+  input.classList.remove(config.inputErrorClass);
+  error.classList.remove(config.spanErrorClass);
+  error.textContent = '';
+};
 
 function addNewCard(config) {
   openPopUp(popUpTypeCard);
   formTypeCard.reset();
   hideInputError(formTypeCard, inputCardPlace, config);
   hideInputError(formTypeCard, inputCardUrl, config);
-  const saveNewCardButton = formTypeCard.querySelector('.pop-up__save-button_type_card');
+  const saveNewCardButton = formTypeCard.querySelector(
+    '.pop-up__save-button_type_card'
+  );
   saveNewCardButton.disabled = true;
   saveNewCardButton.classList.add(config.inactiveButtonClass);
 }
 
 function saveNewCard(event) {
   event.preventDefault();
-  const card = createCard({
-    name: inputCardPlace.value,
-    link: inputCardUrl.value,
-  });
-  cardsContainer.prepend(card);
+  const data = { name: inputCardPlace.value, link: inputCardUrl.value };
+  const card = new Card(data, '.elements__template');
+  const cardElement = card.createCard();
+  cardsContainer.prepend(cardElement);
   closePopUp(popUpTypeCard);
   event.target.reset();
 }
 
-function сhangeLike(event) {
-  const like = event.target;
-  like.classList.toggle('elements__like_checked');
-}
+initialCards.forEach((item) => {
+  const card = new Card(item, '.elements__template');
+  const cardElement = card.createCard();
+  document.querySelector('.elements').append(cardElement);
+});
 
-function deleteCard(event) {
-  event.target.closest('.elements__element').remove();
-}
+const formTypeCardValidator = new FormValidator(
+  validationConfig,
+  '.pop-up__form_type_card'
+);
+formTypeCardValidator.enableValidation();
+
+const formTypeProfileValidator = new FormValidator(
+  validationConfig,
+  '.pop-up__form_type_profile'
+);
+formTypeProfileValidator.enableValidation();
+
+export { openPopUp };

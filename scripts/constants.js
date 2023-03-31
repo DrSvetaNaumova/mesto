@@ -7,7 +7,9 @@ const popUpTypeProfile = document.querySelector('.pop-up_type_profile');
 const popUpTypeImage = document.querySelector('.pop-up_type_image');
 
 const inputProfileName = document.querySelector('.pop-up__input_type_name');
-const inputProfileProfession = document.querySelector('.pop-up__input_type_profession');
+const inputProfileProfession = document.querySelector(
+  '.pop-up__input_type_profession'
+);
 const savedProfileName = document.querySelector('.profile__name');
 const savedProfileProfession = document.querySelector('.profile__profession');
 
@@ -51,10 +53,32 @@ const initialCards = [
 ];
 
 const validationConfig = {
-  formSelector: '.pop-up__form',
   inputSelector: '.pop-up__input',
   submitButtonSelector: '.pop-up__save-button',
   inactiveButtonClass: 'pop-up__save-button_disabled',
   inputErrorClass: 'pop-up__input_type_error',
   spanErrorClass: 'pop-up__error_visible',
+};
+
+export {
+  editProfileButton,
+  addButton,
+  сloseButtons,
+  popUpTypeCard,
+  popUpTypeProfile,
+  popUpTypeImage,
+  inputProfileName,
+  inputProfileProfession,
+  savedProfileName,
+  savedProfileProfession,
+  inputCardUrl,
+  inputCardPlace,
+  popUpImage,
+  popUpDescription,
+  formTypeProfile,
+  formTypeCard,
+  cardsContainer,
+  cardElement,
+  initialCards,
+  validationConfig,
 };
