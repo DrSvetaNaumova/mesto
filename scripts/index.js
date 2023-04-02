@@ -1,4 +1,4 @@
-import { FormValidator } from './FormValidator.js';
+import { FormValidator} from './FormValidator.js';
 import { Card } from './Сard.js';
 import {
   editProfileButton,
@@ -6,6 +6,9 @@ import {
   сloseButtons,
   popUpTypeCard,
   popUpTypeProfile,
+  popUpTypeImage,
+  popUpImage,
+  popUpDescription,
   inputProfileName,
   inputProfileProfession,
   savedProfileName,
@@ -19,10 +22,24 @@ import {
   validationConfig,
 } from './constants.js';
 
-editProfileButton.addEventListener('click', () =>
-  editProfile(validationConfig)
+
+const formTypeCardValidator = new FormValidator(
+  validationConfig,
+  '.pop-up__form_type_card'
 );
-addButton.addEventListener('click', () => addNewCard(validationConfig));
+formTypeCardValidator.enableValidation();
+
+const formTypeProfileValidator = new FormValidator(
+  validationConfig,
+  '.pop-up__form_type_profile'
+);
+formTypeProfileValidator.enableValidation();
+
+editProfileButton.addEventListener('click', () =>
+  editProfile()
+);
+addButton.addEventListener('click', () => addNewCard());
+
 сloseButtons.forEach((item) => {
   const popUp = item.closest('.pop-up');
   item.addEventListener('click', () => closePopUp(popUp));
@@ -59,17 +76,11 @@ function closePopUp(popUp) {
   document.removeEventListener('keydown', closePopUpByEsc);
 }
 
-function editProfile(config) {
+function editProfile() {
   openPopUp(popUpTypeProfile);
+  formTypeProfileValidator.resetValidation();
   inputProfileName.value = savedProfileName.textContent;
   inputProfileProfession.value = savedProfileProfession.textContent;
-  hideInputError(formTypeProfile, inputProfileName, config);
-  hideInputError(formTypeProfile, inputProfileProfession, config);
-  const saveProfileEditButton = formTypeProfile.querySelector(
-    '.pop-up__save-button_type_profile'
-  );
-  saveProfileEditButton.disabled = true;
-  saveProfileEditButton.classList.add(config.inactiveButtonClass);
 }
 
 function saveProfileUpdate(event) {
@@ -79,51 +90,35 @@ function saveProfileUpdate(event) {
   closePopUp(popUpTypeProfile);
 }
 
-const hideInputError = (form, input, config) => {
-  const error = form.querySelector(`.${input.id}-error`);
-  input.classList.remove(config.inputErrorClass);
-  error.classList.remove(config.spanErrorClass);
-  error.textContent = '';
-};
-
-function addNewCard(config) {
+function addNewCard() {
   openPopUp(popUpTypeCard);
   formTypeCard.reset();
-  hideInputError(formTypeCard, inputCardPlace, config);
-  hideInputError(formTypeCard, inputCardUrl, config);
-  const saveNewCardButton = formTypeCard.querySelector(
-    '.pop-up__save-button_type_card'
-  );
-  saveNewCardButton.disabled = true;
-  saveNewCardButton.classList.add(config.inactiveButtonClass);
+  formTypeCardValidator.resetValidation();
 }
+
+function createCard2(data) {
+  const card = new Card(data, '.elements__template', handleCardClick);
+  const cardElement = card.createCard();
+  return cardElement;
+}
+
+initialCards.forEach((data) => {
+  const cardElement = createCard2(data);
+  cardsContainer.append(cardElement);
+ });
 
 function saveNewCard(event) {
   event.preventDefault();
   const data = { name: inputCardPlace.value, link: inputCardUrl.value };
-  const card = new Card(data, '.elements__template');
-  const cardElement = card.createCard();
+  const cardElement = createCard2(data);
   cardsContainer.prepend(cardElement);
   closePopUp(popUpTypeCard);
   event.target.reset();
 }
 
-initialCards.forEach((item) => {
-  const card = new Card(item, '.elements__template');
-  const cardElement = card.createCard();
-  document.querySelector('.elements').append(cardElement);
-});
-
-const formTypeCardValidator = new FormValidator(
-  validationConfig,
-  '.pop-up__form_type_card'
-);
-formTypeCardValidator.enableValidation();
-
-const formTypeProfileValidator = new FormValidator(
-  validationConfig,
-  '.pop-up__form_type_profile'
-);
-formTypeProfileValidator.enableValidation();
-
-export { openPopUp };
+function handleCardClick(name, link) {
+  popUpImage.src = link;
+  popUpImage.alt = name;
+  popUpDescription.textContent = name;
+  openPopUp(popUpTypeImage);
+}
