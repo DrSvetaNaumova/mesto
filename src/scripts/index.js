@@ -66,3 +66,5 @@ function handleCardClick(name, link) {
   popupWithImage.open();
   popupWithImage.setEventListeners();
 }
+
+import '../pages/index.css';
