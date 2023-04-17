@@ -1,5 +1,5 @@
 export class Card {
-  constructor(data, cardTemplateSelector, handleCardClick) {
+  constructor(data, cardTemplateSelector, functionOnCardClick) {
     this._name = data.name;
     this._link = data.link;
     this._cardTemplateSelector = cardTemplateSelector;
@@ -13,7 +13,7 @@ export class Card {
     this._cardDescription.textContent = this._name;
     this._like = this._element.querySelector('.elements__like');
     this._trashButton = this._element.querySelector('.elements__trash-button');
-    this._handleCardClick = handleCardClick;
+    this._functionOnCardClick = functionOnCardClick;
   }
   _getTemplate() {
     const cardElement = document
@@ -42,11 +42,11 @@ export class Card {
     });
 
     this._cardImage.addEventListener('click', () => {
-      this._handleCardClick(this._name, this._link);
+      this._functionOnCardClick(this._name, this._link);
     });
   }
 
-  createCard() {
+  generateCard() {
     this._setEventListeners();
     return this._element;
   }
