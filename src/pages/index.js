@@ -1,3 +1,4 @@
+import '../pages/index.css';
 import { FormValidator} from '../components/FormValidator.js';
 import { Card } from '../components/Card.js';
 import { initialCards, validationConfig,} from '../components/constants.js';
@@ -6,16 +7,14 @@ import { PopupWithForm } from '../components/PopupWithForm.js';
 import { UserInfo} from '../components/UserInfo.js';
 import Section from '../components/Section.js';
 
-const editProfileButton = document.querySelector('.profile__edit-button');
-editProfileButton.addEventListener('click', () =>  editProfile());
+const popupProfileEditButton = document.querySelector('.profile__edit-button');
+popupProfileEditButton.addEventListener('click', () =>  editProfile());
 
-const addButton = document.querySelector('.profile__add-button');
-addButton.addEventListener('click', () => addNewCard());
+const popupCardOpenButton = document.querySelector('.profile__add-button');
+popupCardOpenButton.addEventListener('click', () => openNewCardForm());
 
 const inputProfileName = document.querySelector('.pop-up__input_type_name');
 const inputProfileProfession = document.querySelector('.pop-up__input_type_profession');
-const inputCardUrl = document.querySelector('.pop-up__input_type_url');
-const inputCardPlace = document.querySelector('.pop-up__input_type_place');
 
 const cardList = new Section(initialCards, createCard, '.elements');
 cardList.renderItems();
@@ -28,9 +27,9 @@ formTypeProfileValidator.enableValidation();
 
 const userInfo = new UserInfo('.profile__name', '.profile__profession');
 
+const popupWithFormProfile = new PopupWithForm ('.pop-up_type_profile', saveProfileUpdate);
 
 function editProfile() {
-  const popupWithFormProfile = new PopupWithForm ('.pop-up_type_profile', saveProfileUpdate);
   popupWithFormProfile.open();
   popupWithFormProfile.setEventListeners();
   formTypeProfileValidator.resetValidation();
@@ -39,13 +38,14 @@ function editProfile() {
   inputProfileProfession.value = savedUserInfo.profession;
 }
 
-function saveProfileUpdate(event) {
+function saveProfileUpdate(event, formData) {
   event.preventDefault();
-  userInfo.setUserInfo(inputProfileName.value, inputProfileProfession.value);
+  userInfo.setUserInfo(formData.login, formData.profession);
 }
 
-function addNewCard() {
-  const popupWithFormCard = new PopupWithForm ('.pop-up_type_card', saveNewCard);
+const popupWithFormCard = new PopupWithForm ('.pop-up_type_card', saveNewCard);
+
+function openNewCardForm() {
   popupWithFormCard.open();
   popupWithFormCard.setEventListeners();
   formTypeCardValidator.resetValidation();
@@ -57,10 +57,9 @@ function createCard(data) {
   cardList.addItem(cardElement);  
 }
 
-function saveNewCard(event) {
+function saveNewCard(event, formData) {
   event.preventDefault();
-  const data = { name: inputCardPlace.value, link: inputCardUrl.value };
-  createCard(data);
+ createCard({name: formData.place, link: formData.url}); 
 }
 
 function handleCardClick(name, link) {
@@ -68,5 +67,3 @@ function handleCardClick(name, link) {
   popupWithImage.open();
   popupWithImage.setEventListeners();
 }
-
-import '../pages/index.css';
