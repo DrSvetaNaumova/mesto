@@ -28,10 +28,11 @@ formTypeProfileValidator.enableValidation();
 const userInfo = new UserInfo('.profile__name', '.profile__profession');
 
 const popupWithFormProfile = new PopupWithForm ('.pop-up_type_profile', saveProfileUpdate);
+popupWithFormProfile.setEventListeners();//NEW
 
 function editProfile() {
   popupWithFormProfile.open();
-  popupWithFormProfile.setEventListeners();
+  //popupWithFormProfile.setEventListeners();
   formTypeProfileValidator.resetValidation();
   const savedUserInfo = userInfo.getUserInfo();
   inputProfileName.value = savedUserInfo.name;
@@ -44,10 +45,11 @@ function saveProfileUpdate(event, formData) {
 }
 
 const popupWithFormCard = new PopupWithForm ('.pop-up_type_card', saveNewCard);
+popupWithFormCard.setEventListeners();//NEW
 
 function openNewCardForm() {
   popupWithFormCard.open();
-  popupWithFormCard.setEventListeners();
+  //popupWithFormCard.setEventListeners();
   formTypeCardValidator.resetValidation();
 }
 
@@ -62,8 +64,12 @@ function saveNewCard(event, formData) {
  createCard({name: formData.place, link: formData.url}); 
 }
 
+const popupWithImage = new PopupWithImage('.pop-up_type_image');//NEW
+popupWithImage.setEventListeners();//NEW
+
 function handleCardClick(name, link) {
-  const popupWithImage = new PopupWithImage('.pop-up_type_image', name, link)
-  popupWithImage.open();
-  popupWithImage.setEventListeners();
+  // const popupWithImage = new PopupWithImage('.pop-up_type_image', name, link)
+  // popupWithImage.open();
+  popupWithImage.open(name, link);//NEW
+  //popupWithImage.setEventListeners();
 }
