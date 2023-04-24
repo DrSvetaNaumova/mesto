@@ -9,17 +9,15 @@ export class Popup {
 
   open() {
     this._popupElement.classList.add('pop-up_opened');
+    document.addEventListener('keydown', this._handleEscClose);// чтобы клик по document не вызывал лишний раз данное событие, если не открыт ни один попап (теперь все понятно, большое спасибо за подробное объяснение!)
   }
 
   close() {
     this._popupElement.classList.remove('pop-up_opened');
-    //document.removeEventListener('keydown', this._handleEscClose);
-    // this._popupElement.removeEventListener('click', this._handleOverlayClose);
-    // this._closeButton.removeEventListener('click', this.close);
+    document.removeEventListener('keydown', this._handleEscClose);
   }
 
   setEventListeners() {
-    document.addEventListener('keydown', this._handleEscClose); 
     this._popupElement.addEventListener('click', this._handleOverlayClose);
     this._closeButton.addEventListener('click', this.close);
   }
