@@ -1,26 +1,36 @@
 <!DOCTYPE html>
 <html lang="ru">
   <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Mesto Russia</title>
   </head>
 
   <body class="page">
     <header class="header">
-      <img class="header__logo" src="<%=require('./images/logo.svg')%>" alt="логотип">
+      <img
+        class="header__logo"
+        src="<%=require('./images/logo.svg')%>"
+        alt="логотип"
+      />
     </header>
 
     <main class="main">
       <section class="profile">
         <div class="profile__main">
-          <img  class="profile__avatar" src="<%=require('./images/avatar.jpg')%>" alt="аватарка">
+          <div class="profile__avatar-container">
+            <img
+              class="profile__avatar"
+             
+              alt="аватарка"
+            />
+          </div>
           <div class="profile__text">
             <div class="profile__name-edit-container">
-              <h1 class="profile__name">Жак-Ив Кусто</h1>
+              <h1 class="profile__name">#</h1>
               <button class="profile__edit-button" type="button"></button>
             </div>
-            <p class="profile__profession">Исследователь океана</p>
+            <p class="profile__profession">#</p>
           </div>
         </div>
         <button class="profile__add-button" type="button"></button>
@@ -29,11 +39,14 @@
       <section class="elements">
         <template class="elements__template">
           <article class="elements__element">
-            <img class="elements__image" src="#" alt="#">
+            <img class="elements__image" src="#" alt="#" />
             <button class="elements__trash-button" type="button"></button>
             <div class="elements__description-like">
               <h2 class="elements__description"></h2>
-              <button class="elements__like" type="button"></button>
+              <div class="elements__like-counter-container">
+                <button class="elements__like" type="button"></button>
+                <span class="elements__likes-counter" id="counter">0</span>
+              </div>
             </div>
           </article>
         </template>
@@ -62,7 +75,7 @@
             minlength="2"
             maxlength="40"
             required
-          >
+          />
           <span class="pop-up__error login-error"></span>
           <input
             id="profession"
@@ -73,7 +86,7 @@
             minlength="2"
             maxlength="200"
             required
-          >
+          />
           <span class="pop-up__error profession-error"></span>
           <button
             class="pop-up__save-button pop-up__save-button_type_profile"
@@ -103,7 +116,7 @@
             minlength="2"
             maxlength="30"
             required
-          >
+          />
           <span class="pop-up__error place-error"></span>
           <input
             id="url"
@@ -112,7 +125,7 @@
             name="url"
             placeholder="Ссылка на картинку"
             required
-          >
+          />
           <span class="pop-up__error url-error"></span>
           <button
             class="pop-up__save-button pop-up__save-button_type_card"
@@ -127,8 +140,48 @@
     <section class="pop-up pop-up_type_image">
       <div class="pop-up__container pop-up__container_type_image">
         <button class="pop-up__close-button" type="button"></button>
-        <img class="pop-up__image" src="#" alt="#">
+        <img class="pop-up__image" src="#" alt="#" />
         <h2 class="pop-up__description"></h2>
+      </div>
+    </section>
+
+    <section class="pop-up pop-up_type_submit">
+      <div class="pop-up__container pop-up__container_type_submit">
+        <button class="pop-up__close-button" type="button"></button>
+        <h2 class="pop-up__question">Вы уверены?</h2>
+        <button
+          class="pop-up__save-button pop-up__save-button_type_submit"
+          type="submit"
+        >
+          Да
+        </button>
+      </div>
+    </section>
+
+    <section class="pop-up pop-up_type_avatar">
+      <div class="pop-up__container pop-up__container_type_avatar">
+        <button class="pop-up__close-button" type="button"></button>
+        <h2 class="pop-up__avatar-update-statement">Обновить аватар</h2>
+        <form
+          name="form-type-avatar"
+          class="pop-up__form pop-up__form_type_avatar"
+        >
+          <input
+            id="avatar"
+            class="pop-up__input pop-up__input_type_avatar"
+            type="url"
+            name="avatar"
+            placeholder="https://somewebsite.com/someimage.jpg"
+            required
+          />
+          <span class="pop-up__error avatar-error"></span>
+          <button
+            class="pop-up__save-button pop-up__save-button_type_avatar"
+            type="submit"
+          >
+            Сохранить
+          </button>
+        </form>
       </div>
     </section>
   </body>

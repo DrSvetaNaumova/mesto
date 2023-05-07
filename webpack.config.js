@@ -12,6 +12,9 @@ module.exports = {
     filename: 'main.js',
         publicPath: ''
   },
+  experiments: {
+    topLevelAwait: true
+  },
     mode: 'development',
   devServer: {
     static: path.resolve(__dirname, './dist'),

@@ -1,8 +1,26 @@
-export class Card {
-  constructor(data, cardTemplateSelector, functionOnCardClick) {
+export default class Card {
+  constructor(
+    data,
+    cardTemplateSelector,
+    handleCardClick,
+    handleLikeClick,
+    handleTrashIconClick,
+    userID
+  ) {
+    //data=данные из сервера
     this._name = data.name;
     this._link = data.link;
+    this._likes = data.likes;
+    this._cardID = data._id;
+
     this._cardTemplateSelector = cardTemplateSelector;
+
+    this._handleCardClick = handleCardClick;
+    this._handleLikeClick = handleLikeClick;
+    this._handleTrashIconClick = handleTrashIconClick;
+
+    this._userID = userID;
+
     this._element = this._getTemplate();
     this._cardImage = this._element.querySelector('.elements__image');
     this._cardImage.src = this._link;
@@ -11,9 +29,19 @@ export class Card {
       '.elements__description'
     );
     this._cardDescription.textContent = this._name;
-    this._like = this._element.querySelector('.elements__like');
+    this._likeElement = this._element.querySelector('.elements__like');
+    this._counter = this._element.querySelector('.elements__likes-counter');
+    this._counter.textContent = data.likes.length; //из сервера
+
     this._trashButton = this._element.querySelector('.elements__trash-button');
-    this._functionOnCardClick = functionOnCardClick;
+
+    if (this._userID !== data.owner._id) {
+      this._trashButton.classList.add('elements__trash-button_hidden');
+    }
+
+    if (this._isLikedByUser()) {
+      this._likeElement.classList.add('elements__like_checked');
+    }
   }
   _getTemplate() {
     const cardElement = document
@@ -24,26 +52,26 @@ export class Card {
     return cardElement;
   }
 
-  _changeLike() {
-    this._like.classList.toggle('elements__like_checked');
-  }
-
-  _deleteCard() {
-    this._element.remove();
-    this._element = null;
+  _isLikedByUser() {
+    for (const item of this._likes) {
+      if (item._id === this._userID) {
+        return true;
+      }
+    }
+    return false;
   }
 
   _setEventListeners() {
-    this._like.addEventListener('click', () => {
-      this._changeLike();
-    });
+    this._likeElement.addEventListener('click', () =>
+      this._handleLikeClick(this)
+    ); //анонимная функция для доступа к объекту
 
-    this._trashButton.addEventListener('click', () => {
-      this._deleteCard();
-    });
+    this._trashButton.addEventListener('click', () =>
+      this._handleTrashIconClick(this)
+    );
 
     this._cardImage.addEventListener('click', () => {
-      this._functionOnCardClick(this._name, this._link);
+      this._handleCardClick(this._name, this._link);
     });
   }
 
