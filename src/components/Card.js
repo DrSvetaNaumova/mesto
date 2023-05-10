@@ -3,7 +3,8 @@ export default class Card {
     data,
     cardTemplateSelector,
     handleCardClick,
-    handleLikeClick,
+    addLike,
+    deleteLike,
     handleTrashIconClick,
     userID
   ) {
@@ -16,7 +17,9 @@ export default class Card {
     this._cardTemplateSelector = cardTemplateSelector;
 
     this._handleCardClick = handleCardClick;
-    this._handleLikeClick = handleLikeClick;
+    this._addLike = addLike;
+    this._deleteLike = deleteLike;
+
     this._handleTrashIconClick = handleTrashIconClick;
 
     this._userID = userID;
@@ -39,9 +42,6 @@ export default class Card {
       this._trashButton.classList.add('elements__trash-button_hidden');
     }
 
-    if (this._isLikedByUser()) {
-      this._likeElement.classList.add('elements__like_checked');
-    }
   }
   _getTemplate() {
     const cardElement = document
@@ -62,9 +62,22 @@ export default class Card {
   }
 
   _setEventListeners() {
-    this._likeElement.addEventListener('click', () =>
-      this._handleLikeClick(this)
-    ); //анонимная функция для доступа к объекту
+    this._likeElement.addEventListener('click', () => {
+      if (this._isLikedByUser()) {
+        this._deleteLike(this._cardID).then((response) => {
+          this._likes = response.likes;
+          this._counter.textContent = response.likes.length;
+          this._likeElement.classList.remove('elements__like_checked');
+          
+        });
+      } else {
+        this._addLike(this._cardID).then((response) => {
+          this._likes = response.likes;
+          this._counter.textContent = response.likes.length;
+          this._likeElement.classList.add('elements__like_checked');
+        });
+      }
+    }); 
 
     this._trashButton.addEventListener('click', () =>
       this._handleTrashIconClick(this)
@@ -78,5 +91,10 @@ export default class Card {
   generateCard() {
     this._setEventListeners();
     return this._element;
+  }
+
+  deleteCard() {
+    this._element.remove();
+    this._element = null;
   }
 }

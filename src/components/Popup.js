@@ -9,7 +9,7 @@ export class Popup {
 
   open() {
     this._popupElement.classList.add('pop-up_opened');
-    document.addEventListener('keydown', this._handleEscClose);// чтобы клик по document не вызывал лишний раз данное событие, если не открыт ни один попап (теперь все понятно, большое спасибо за подробное объяснение!)
+    document.addEventListener('keydown', this._handleEscClose);// чтобы клик по document не вызывал лишний раз данное событие, если не открыт ни один попап
   }
 
   close() {

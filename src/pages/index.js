@@ -1,13 +1,20 @@
 import '../pages/index.css';
 import FormValidator from '../components/FormValidator.js';
 import Card from '../components/Card.js';
-import { validationConfig } from '../components/constants.js';
 import { PopupWithImage } from '../components/PopupWithImage.js';
 import { PopupWithForm } from '../components/PopupWithForm.js';
 import { PopupWithSubmit } from '../components/PopupWithSubmit.js';
 import UserInfo from '../components/UserInfo.js';
 import Section from '../components/Section.js';
 import Api from '../components/Api.js';
+
+const validationConfig = {
+  inputSelector: '.pop-up__input',
+  submitButtonSelector: '.pop-up__save-button',
+  inactiveButtonClass: 'pop-up__save-button_disabled',
+  inputErrorClass: 'pop-up__input_type_error',
+  spanErrorClass: 'pop-up__error_visible',
+};
 
 const popupProfileEditButton = document.querySelector('.profile__edit-button');
 popupProfileEditButton.addEventListener('click', () => editProfile());
@@ -42,6 +49,9 @@ popupWithFormCard.setEventListeners();
 
 const popupWithImage = new PopupWithImage('.pop-up_type_image');
 popupWithImage.setEventListeners();
+
+const popupWithSubmit = new PopupWithSubmit('.pop-up_type_submit');
+popupWithSubmit.setEventListeners();
 
 const inputProfileName = document.querySelector('.pop-up__input_type_name');
 const inputProfileProfession = document.querySelector(
@@ -90,18 +100,21 @@ function editAvatar() {
 
 function saveAvatar(event, formData) {
   event.preventDefault();
-  api
+  const promise = api
     .replaceAvatar(formData.avatar)
-    .then((response) => {
-      if (response.ok) {
-        userInfo.setUserAvatar(formData.avatar);
-      }
-      popupSaveAvatarButton.textContent = 'Создать';
+    .then(() => {
+      userInfo.setUserAvatar(formData.avatar);
     })
     .catch((err) => {
       console.log(err);
+      return Promise.reject('error');
+    })
+    .finally(() => {
+      popupSaveAvatarButton.textContent = 'Создать';
     });
+
   popupSaveAvatarButton.textContent = 'Сохранение...';
+  return promise;
 }
 
 function editProfile() {
@@ -114,18 +127,20 @@ function editProfile() {
 
 function saveProfileUpdate(event, formData) {
   event.preventDefault();
-  api
+  const promise = api
     .replaceUserInfo(formData.login, formData.profession)
-    .then((response) => {
-      if (response.ok) {
-        userInfo.setUserNameAndProfession(formData.login, formData.profession);
-      }
-      popupSaveProfileButton.textContent = 'Сохранить';
+    .then(() => {
+      userInfo.setUserNameAndProfession(formData.login, formData.profession);
     })
     .catch((err) => {
       console.log(err);
+      return Promise.reject('error');
+    })
+    .finally(() => {
+      popupSaveProfileButton.textContent = 'Сохранить';
     });
   popupSaveProfileButton.textContent = 'Сохранение...';
+  return promise;
 }
 
 function openNewCardForm() {
@@ -135,44 +150,42 @@ function openNewCardForm() {
 
 function createCard(data) {
   const userID = userInfo.getUserInfo().userID;
-  const handleLikeClick = (that) => {
-    if (!that._isLikedByUser()) {
-      api.deleteLike(that._cardID).then((response) => {
-        that._likes = response.likes;
-        that._counter.textContent = response.likes.length;
-        if (that._isLikedByUser()) {
-          that._likeElement.classList.add('elements__like_checked');
-        }
-      });
-    } else {
-      api.addLike(that._cardID).then((response) => {
-        that._likes = response.likes;
-        that._counter.textContent = response.likes.length;
-        if (!that._isLikedByUser()) {
-          that._likeElement.classList.remove('elements__like_checked');
-        }
-      });
-    }
+  const addLike = (cardID) => {
+    const promise = api.addLike(cardID).catch((err) => {
+      console.log(err);
+      return Promise.reject('error');
+    });
+    return promise;
+  };
+  const deleteLike = (cardID) => {
+    const promise = api.deleteLike(cardID).catch((err) => {
+      console.log(err);
+      return Promise.reject('error');
+    });
+    return promise;
   };
 
-  const handleTrashIconClick = (that) => {
+  const handleTrashIconClick = (card) => {
     const actionAfterUserConfirmation = () => {
-      that._element.remove();
-      that._element = null;
-      api.deleteCard(that._cardID);
+      const promise = api
+        .deleteCard(card._cardID)
+        .then(() => card.deleteCard())
+        .catch((err) => {
+          console.log(err);
+          return Promise.reject('error');
+        });
+      return promise;
     };
-    const popupWithSubmit = new PopupWithSubmit(
-      '.pop-up_type_submit',
-      actionAfterUserConfirmation
-    );
-    popupWithSubmit.setEventListeners();
     popupWithSubmit.open();
+    popupWithSubmit.setAction(actionAfterUserConfirmation);
   };
+
   const card = new Card(
     data,
     '.elements__template',
     handleCardClick,
-    handleLikeClick,
+    addLike,
+    deleteLike,
     handleTrashIconClick,
     userID
   );
@@ -182,11 +195,20 @@ function createCard(data) {
 
 function saveNewCard(event, formData) {
   event.preventDefault();
-  api.addNewCard(formData.place, formData.url).then((response) => {
-    createCard(response);
-    popupSaveCardButton.textContent = 'Сохранить';
-  });
+  const promise = api
+    .addNewCard(formData.place, formData.url)
+    .then((response) => {
+      createCard(response);
+    })
+    .catch((err) => {
+      console.log(err);
+      return Promise.reject('error');
+    })
+    .finally(() => {
+      popupSaveCardButton.textContent = 'Сохранить';
+    });
   popupSaveCardButton.textContent = 'Сохранение...';
+  return promise;
 }
 
 function handleCardClick(name, link) {
@@ -195,23 +217,19 @@ function handleCardClick(name, link) {
 
 //загрузка страницы
 
-// загрузка информации о пользователе с сервера
-await api
-  .getUserInfo()
-  .then((response) => {
+let cardList;
+
+Promise.all([api.getUserInfo(), api.getServerCards()])
+  .then(([userData, serverCards]) => {
     userInfo.setUserFullInfo(
-      response.name,
-      response.about,
-      response.avatar,
-      response._id
+      userData.name,
+      userData.about,
+      userData.avatar,
+      userData._id
     );
+    cardList = new Section(serverCards, createCard, '.elements');
+    cardList.renderItems();
   })
   .catch((err) => {
     console.log(err);
   });
-
-// загрузка карточек с сервера
-const serverCards = await api.getServerCards();
-
-const cardList = new Section(serverCards, createCard, '.elements');
-cardList.renderItems();

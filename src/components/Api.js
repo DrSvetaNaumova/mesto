@@ -4,15 +4,21 @@ export default class Api {
     this._headers = options.headers;
   }
 
+  //проверка ответа сервера
+  _checkResponse(res) {
+    if (!res.ok) {
+      return Promise.reject(`Ошибка ${res.status}`);
+    }
+    return res;
+  }
+
   // получить данные пользователя (GET)
   getUserInfo() {
     const promise = fetch(this._baseUrl + '/users/me', {
       headers: this._headers,
     })
-      .then((res) => res.json())
-      .catch((err) => {
-        console.log(err);
-      });
+      .then(this._checkResponse)
+      .then((res) => res.json());
     return promise;
   }
 
@@ -25,7 +31,7 @@ export default class Api {
         name: login,
         about: profession,
       }),
-    });
+    }).then(this._checkResponse);
     return promise;
   }
 
@@ -37,7 +43,7 @@ export default class Api {
       body: JSON.stringify({
         avatar: avatar,
       }),
-    });
+    }).then(this._checkResponse);
     return promise;
   }
 
@@ -46,10 +52,9 @@ export default class Api {
     const promise = fetch(this._baseUrl + '/cards', {
       headers: this._headers,
     })
-      .then((res) => res.json())
-      .catch((err) => {
-        console.log(err);
-      });
+      // .then((res) => res.json())
+      .then(this._checkResponse)
+      .then((res) => res.json());
     return promise;
   }
   //добавить новую карточку
@@ -62,64 +67,40 @@ export default class Api {
         link: url,
       }),
     })
-      .then((res) => res.json())
-      .catch((err) => {
-        console.log(err);
-      });
+      .then(this._checkResponse)
+      .then((res) => res.json());
     return promise;
   }
   // удалить карточку (DELETE)
   deleteCard(cardID) {
-    const promise = fetch(
-      'https://mesto.nomoreparties.co/v1/cohort-65/cards/' + cardID,
-      {
-        method: 'DELETE',
-        headers: {
-          authorization: 'e5c7629d-174e-499d-9501-41f48afec7e6',
-          'Content-Type': 'application/json',
-        },
-      }
-    ).catch((err) => {
-      console.log(err); // выведем ошибку в консоль
-    });
+    const promise = fetch(this._baseUrl + '/cards/' + cardID, {
+      method: 'DELETE',
+      headers: this._headers,
+    }).then(this._checkResponse);
     return promise;
   }
 
   // “залайкать” карточку (PUT)
   addLike(cardID) {
-    const promise = fetch(
-      'https://mesto.nomoreparties.co/v1/cohort-65/cards/' + cardID + '/likes',
-      {
-        method: 'DELETE',
-        headers: {
-          authorization: 'e5c7629d-174e-499d-9501-41f48afec7e6',
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-      .then((res) => res.json())
-      .catch((err) => {
-        console.log(err);
-      });
+    const promise = fetch(this._baseUrl + '/cards/' + cardID + '/likes', {
+      method: 'PUT',
+      headers: this._headers,
+    })
+      .then(this._checkResponse)
+      .then((res) => res.json());
     return promise;
+    
   }
 
   // удалить лайк карточки (DELETE)
   deleteLike(cardID) {
-    const promise = fetch(
-      'https://mesto.nomoreparties.co/v1/cohort-65/cards/' + cardID + '/likes',
-      {
-        method: 'PUT',
-        headers: {
-          authorization: 'e5c7629d-174e-499d-9501-41f48afec7e6',
-          'Content-Type': 'application/json',
-        },
-      }
-    )
-      .then((res) => res.json())
-      .catch((err) => {
-        console.log(err);
-      });
+    const promise = fetch(this._baseUrl + '/cards/' + cardID + '/likes', {
+      method: 'DELETE',
+      headers: this._headers,
+    })
+      // .then((res) => res.json())
+      .then(this._checkResponse)
+      .then((res) => res.json());
     return promise;
   }
 }
