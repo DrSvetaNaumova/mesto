@@ -16,7 +16,7 @@ export class PopupWithForm extends Popup {
   
     _submitAndClose(evt) {
       const promise = this.submitForm(evt, this._getInputValues());
-      promise.then(() => {this.close()})
+      promise.then(() => {this.close()})// чтобы попап не закрывался в случае ошибки
       
     }
     setEventListeners() {

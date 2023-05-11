@@ -1,5 +1,6 @@
 import '../pages/index.css';
 import FormValidator from '../components/FormValidator.js';
+import { validationConfig } from '../utils/validationConfig.js';
 import Card from '../components/Card.js';
 import { PopupWithImage } from '../components/PopupWithImage.js';
 import { PopupWithForm } from '../components/PopupWithForm.js';
@@ -8,29 +9,20 @@ import UserInfo from '../components/UserInfo.js';
 import Section from '../components/Section.js';
 import Api from '../components/Api.js';
 
-const validationConfig = {
-  inputSelector: '.pop-up__input',
-  submitButtonSelector: '.pop-up__save-button',
-  inactiveButtonClass: 'pop-up__save-button_disabled',
-  inputErrorClass: 'pop-up__input_type_error',
-  spanErrorClass: 'pop-up__error_visible',
-};
+import {
+  popupProfileEditButton,
+  popupCardOpenButton,
+  popupSaveProfileButton,
+  popupSaveAvatarButton,
+  popupSaveCardButton,
+  inputProfileName,
+  inputProfileProfession,
+  avatarContainer,
+} from '../utils/constants.js';
 
-const popupProfileEditButton = document.querySelector('.profile__edit-button');
 popupProfileEditButton.addEventListener('click', () => editProfile());
 
-const popupCardOpenButton = document.querySelector('.profile__add-button');
 popupCardOpenButton.addEventListener('click', () => openNewCardForm());
-
-const popupSaveProfileButton = document.querySelector(
-  '.pop-up__save-button_type_profile'
-);
-const popupSaveAvatarButton = document.querySelector(
-  '.pop-up__save-button_type_avatar'
-);
-const popupSaveCardButton = document.querySelector(
-  '.pop-up__save-button_type_card'
-);
 
 const popupWithFormProfile = new PopupWithForm(
   '.pop-up_type_profile',
@@ -53,12 +45,6 @@ popupWithImage.setEventListeners();
 const popupWithSubmit = new PopupWithSubmit('.pop-up_type_submit');
 popupWithSubmit.setEventListeners();
 
-const inputProfileName = document.querySelector('.pop-up__input_type_name');
-const inputProfileProfession = document.querySelector(
-  '.pop-up__input_type_profession'
-);
-
-const avatarContainer = document.querySelector('.profile__avatar-container');
 avatarContainer.addEventListener('click', () => editAvatar());
 
 const formTypeProfileValidator = new FormValidator(
@@ -169,7 +155,9 @@ function createCard(data) {
     const actionAfterUserConfirmation = () => {
       const promise = api
         .deleteCard(card._cardID)
-        .then(() => card.deleteCard())
+        .then(() => {
+          card.deleteCard();
+        })
         .catch((err) => {
           console.log(err);
           return Promise.reject('error');

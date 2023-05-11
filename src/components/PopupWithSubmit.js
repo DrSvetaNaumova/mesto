@@ -15,8 +15,8 @@ export class PopupWithSubmit extends Popup {
     super.setEventListeners();
     this._submitButton.addEventListener('click', (evt) => {
       evt.preventDefault();
-      this._actionAfterUserConfirmation();
-      this.close();
+      const promise = this._actionAfterUserConfirmation();
+      promise.then(() => this.close());// чтобы попап не закрывался в случае ошибки
     });
   }
 }

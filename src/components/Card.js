@@ -42,6 +42,9 @@ export default class Card {
       this._trashButton.classList.add('elements__trash-button_hidden');
     }
 
+    if (this._isLikedByUser()) {
+      this._likeElement.classList.add('elements__like_checked');
+    }
   }
   _getTemplate() {
     const cardElement = document
